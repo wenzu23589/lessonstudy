@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Study Assessment</title>
+
+<!-- SurveyJS Form Library (current CDN) -->
+<link href="https://unpkg.com/survey-core/survey-core.min.css" rel="stylesheet">
+<script src="https://unpkg.com/survey-core/survey.core.min.js"></script>
+<script src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script>
+<script src="https://unpkg.com/survey-core/themes/index.min.js"></script>
+
+<style>
+  body { margin: 0; background: #f3f5f7; }
+  #surveyContainer { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+  /* Live readout shown under each slider */
+  .scale-readout {
+    margin: 6px 0 2px;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    min-height: 34px;
+  }
+  .scale-readout__val { font-size: 15px; font-weight: 700; }
+  .scale-readout__meaning { display:block; font-size: 12px; line-height: 1.4; color: #5a6b7b; margin-top: 2px; }
+  .scale-readout--Severity .scale-readout__val { color: #b23a3a; }
+  .scale-readout--Occurance .scale-readout__val { color: #1f7a5a; }
+  .scale-readout--Detectability .scale-readout__val { color: #2a5d9c; }
+  .scale-readout--empty { color: #9aa7b4; font-style: italic; font-size: 13px; }
+</style>
+</head>
+<body>
+<div id="surveyContainer"></div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ * 1. Survey definition (embedded from your uploaded JSON)            *
+ * ------------------------------------------------------------------ */
+const surveyJson = {"title": "Lesson Study Assessment", "description": "The following questionnaire contains a list of  observations that reflect aspects of the lesson study which did not go well.  Each observation is accompanied by an explanation identifying the root cause of the problem that was observed. For each statement please indicate the Severity, Occurrence and Detection. Each dimension is scored from 1 to 10.\n", "pages": [{"name": "page1", "elements": [{"type": "html", "name": "question2", "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Educational Risk Assessment Scales</title>\n<style>\n  .rsk, .rsk * {\n    box-sizing: border-box;\n    margin: 0;\n    padding: 0;\n    font-family: \"Segoe UI\", system-ui, -apple-system, sans-serif;\n  }\n  .rsk {\n    --ink: #1f2933;\n    --muted: #5a6b7b;\n    --rule: #e4eaf0;\n    --sev: #b23a3a;\n    --occ: #1f7a5a;\n    --det: #2a5d9c;\n    --sev-bg: #fbeeee;\n    --occ-bg: #eaf6f0;\n    --det-bg: #ebf1fa;\n    --score-bg: #f4f6f8;\n    color: var(--ink);\n    line-height: 1.4;\n    display: grid;\n    grid-template-columns: repeat(3, minmax(0, 1fr));\n    gap: 18px;\n    width: 100%;\n    max-width: 1400px;\n    margin: 0 auto;\n    align-items: stretch;\n  }\n  .rsk__col {\n    border: 1px solid var(--rule);\n    border-radius: 10px;\n    overflow: hidden;\n    background: #fff;\n    display: flex;\n    flex-direction: column;\n    min-width: 0;\n  }\n  .rsk__head {\n    padding: 12px 14px;\n    border-top: 4px solid var(--accent);\n    border-bottom: 2px solid var(--accent);\n  }\n  .rsk__title {\n    font-size: 16px !important;\n    line-height: 1.2 !important;\n    font-weight: 700;\n    color: var(--accent);\n    white-space: normal;\n    word-break: break-word;\n  }\n  .rsk__sub {\n    font-size: 12px !important;\n    line-height: 1.35 !important;\n    font-weight: 400;\n    color: var(--muted);\n    margin-top: 3px !important;\n  }\n  .rsk__list { display: flex; flex-direction: column; }\n  .rsk__row {\n    padding: 9px 14px !important;\n    border-bottom: 1px solid var(--rule);\n  }\n  .rsk__row:last-child { border-bottom: none; }\n  .rsk__row:hover { background: var(--row-hover); }\n  .rsk__top {\n    display: flex;\n    align-items: baseline;\n    gap: 8px;\n  }\n  .rsk__score {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    min-width: 24px;\n    height: 22px;\n    padding: 0 5px;\n    border-radius: 5px;\n    background: var(--score-bg);\n    color: var(--accent);\n    font-weight: 700;\n    font-size: 13px !important;\n    flex-shrink: 0;\n  }\n  .rsk__desc {\n    font-size: 14px !important;\n    line-height: 1.3 !important;\n    font-weight: 600;\n    color: var(--ink);\n  }\n  .rsk__interp {\n    font-size: 12px !important;\n    line-height: 1.4 !important;\n    color: var(--muted);\n    margin-top: 3px !important;\n    margin-left: 32px !important;\n    white-space: normal;\n    word-break: normal;\n    overflow-wrap: break-word;\n  }\n  .rsk__col--sev { --accent: var(--sev); --row-hover: var(--sev-bg); }\n  .rsk__col--occ { --accent: var(--occ); --row-hover: var(--occ-bg); }\n  .rsk__col--det { --accent: var(--det); --row-hover: var(--det-bg); }\n\n  @media (max-width: 900px) {\n    .rsk { grid-template-columns: 1fr; max-width: 640px; }\n    .rsk__title { font-size: 18px !important; }\n    .rsk__sub { font-size: 13px !important; }\n    .rsk__desc { font-size: 15px !important; }\n    .rsk__interp { font-size: 13px !important; }\n  }\n</style>\n</head>\n<body>\n<div class=\"rsk\">\n\n  <div class=\"rsk__col rsk__col--sev\">\n    <div class=\"rsk__head\">\n      <div class=\"rsk__title\">Severity</div>\n      <div class=\"rsk__sub\">How serious is the impact on learning if it occurs?</div>\n    </div>\n    <div class=\"rsk__list\">\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">1</span><span class=\"rsk__desc\">Negligible</span></div><div class=\"rsk__interp\">Minor disruption, easily corrected without impact on learning.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">2</span><span class=\"rsk__desc\">Very Low</span></div><div class=\"rsk__interp\">Slight delay; students can recover without teacher.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">3</span><span class=\"rsk__desc\">Low</span></div><div class=\"rsk__interp\">Short confusion or distraction; minor loss of focus.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">4</span><span class=\"rsk__desc\">Moderate</span></div><div class=\"rsk__interp\">Temporary setback for a small group of students.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">5</span><span class=\"rsk__desc\">Noticeable</span></div><div class=\"rsk__interp\">Clear impact on understanding for several students.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">6</span><span class=\"rsk__desc\">Significant</span></div><div class=\"rsk__interp\">Learning outcome partially compromised for many students.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">7</span><span class=\"rsk__desc\">High</span></div><div class=\"rsk__interp\">Major interference with lesson flow; learning outcomes affected.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">8</span><span class=\"rsk__desc\">Very High</span></div><div class=\"rsk__interp\">Most students fail to grasp key concept or complete task.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">9</span><span class=\"rsk__desc\">Critical</span></div><div class=\"rsk__interp\">Lesson objective not achieved; frustration or disengagement.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">10</span><span class=\"rsk__desc\">Severe</span></div><div class=\"rsk__interp\">Lesson fails entirely; students disengage, activity abandoned.</div></div>\n    </div>\n  </div>\n\n  <div class=\"rsk__col rsk__col--occ\">\n    <div class=\"rsk__head\">\n      <div class=\"rsk__title\">Occurrence (Likelihood)</div>\n      <div class=\"rsk__sub\">How likely is it to happen during a lesson?</div>\n    </div>\n    <div class=\"rsk__list\">\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">1</span><span class=\"rsk__desc\">Rare</span></div><div class=\"rsk__interp\">Unlikely; has never occurred in similar lessons.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">2</span><span class=\"rsk__desc\">Very Low</span></div><div class=\"rsk__interp\">Happens once a term or less.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">3</span><span class=\"rsk__desc\">Low</span></div><div class=\"rsk__interp\">Might occur in isolated instances (e.g., 1–2 students).</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">4</span><span class=\"rsk__desc\">Moderate</span></div><div class=\"rsk__interp\">Could happen occasionally in similar contexts.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">5</span><span class=\"rsk__desc\">Medium</span></div><div class=\"rsk__interp\">Likely in each lesson if not controlled.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">6</span><span class=\"rsk__desc\">Fairly High</span></div><div class=\"rsk__interp\">Happens with several students or in each group.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">7</span><span class=\"rsk__desc\">High</span></div><div class=\"rsk__interp\">Frequently happens during similar lessons.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">8</span><span class=\"rsk__desc\">Very High</span></div><div class=\"rsk__interp\">Almost always occurs under current conditions.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">9</span><span class=\"rsk__desc\">Extreme</span></div><div class=\"rsk__interp\">Expected to occur repeatedly and predictably.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">10</span><span class=\"rsk__desc\">Certain</span></div><div class=\"rsk__interp\">Guaranteed to happen every time.</div></div>\n    </div>\n  </div>\n\n  <div class=\"rsk__col rsk__col--det\">\n    <div class=\"rsk__head\">\n      <div class=\"rsk__title\">Detection</div>\n      <div class=\"rsk__sub\">How hard is it for the teacher to notice it?</div>\n    </div>\n    <div class=\"rsk__list\">\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">1</span><span class=\"rsk__desc\">Very Easy</span></div><div class=\"rsk__interp\">Instantly visible to teacher; corrected immediately.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">2</span><span class=\"rsk__desc\">Easy</span></div><div class=\"rsk__interp\">Quickly spotted through observation or student response.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">3</span><span class=\"rsk__desc\">Low Difficulty</span></div><div class=\"rsk__interp\">Detected through monitoring but after a short delay.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">4</span><span class=\"rsk__desc\">Moderate</span></div><div class=\"rsk__interp\">Teacher notices after some impact has occurred.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">5</span><span class=\"rsk__desc\">Medium</span></div><div class=\"rsk__interp\">Detected at lesson's end or via exit cards.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">6</span><span class=\"rsk__desc\">Difficult</span></div><div class=\"rsk__interp\">Noticed only after reflection or discussion with colleagues.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">7</span><span class=\"rsk__desc\">Very Difficult</span></div><div class=\"rsk__interp\">Missed during lesson; only identified post-lesson.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">8</span><span class=\"rsk__desc\">Hard</span></div><div class=\"rsk__interp\">Requires external observation to be noticed.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">9</span><span class=\"rsk__desc\">Extremely Hard</span></div><div class=\"rsk__interp\">Not apparent even after reviewing outcomes.</div></div>\n      <div class=\"rsk__row\"><div class=\"rsk__top\"><span class=\"rsk__score\">10</span><span class=\"rsk__desc\">Undetectable</span></div><div class=\"rsk__interp\">Cannot be detected without detailed post-hoc analysis.</div></div>\n    </div>\n  </div>\n\n</div>\n</body>\n</html>"}, {"type": "boolean", "name": "question1", "title": "I confirm that I have read and understand the rating scales provided."}]}, {"name": "page2", "visibleIf": "{question1} = true", "elements": [{"type": "panel", "name": "panel1", "isRequired": true, "elements": [{"type": "expression", "name": "question3", "title": "Observation", "description": "Students were unable to independently identify angles as the mathematical focus of the lesson. When asked what they were learning, most described the physical activity (moving the string, doing the clock) rather than the mathematical concept."}, {"type": "expression", "name": "question4", "startWithNewLine": false, "title": "Likely Cause", "description": "The lesson prioritised doing over naming. The activity was highly engaging but the explicit connection between the physical experience and mathematical vocabulary (angles, degrees, rotation) was not made consistently or systematically throughout. The concept label was not reinforced at key moments during the outdoor phase."}, {"type": "slider", "name": "question6", "title": "Severity", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question5", "title": "Occurance", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question7", "title": "Detectability", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, {"value": 2, "text": ""}, {"value": 3, "text": ""}, {"value": 4, "text": ""}, {"value": 5, "text": ""}, {"value": 6, "text": ""}, {"value": 7, "text": ""}, {"value": 8, "text": ""}, {"value": 9, "text": ""}, {"value": 10, "text": ""}]}]}, {"type": "panel", "name": "panel2", "isRequired": true, "elements": [{"type": "expression", "name": "question8", "title": "Observation", "description": "Two students remained disengaged throughout the entire lesson, including during the outdoor activity which was designed to be inclusive."}, {"type": "expression", "name": "question9", "startWithNewLine": false, "title": "Likely Cause", "description": "The lesson assumed that the open, physical format would be sufficient for all learners. No targeted strategies were in place for students known to struggle with participation — no assigned roles, peer pairing, or directed check-ins. The group structure allowed passive students to remain on the periphery without being noticed or prompted."}, {"type": "slider", "name": "question10", "title": "Severity", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question11", "title": "Occurance", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question12", "title": "Detectability", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, {"value": 2, "text": ""}, {"value": 3, "text": ""}, {"value": 4, "text": ""}, {"value": 5, "text": ""}, {"value": 6, "text": ""}, {"value": 7, "text": ""}, {"value": 8, "text": ""}, {"value": 9, "text": ""}, {"value": 10, "text": ""}]}]}, {"type": "panel", "name": "panel3", "isRequired": true, "elements": [{"type": "expression", "name": "question13", "title": "Observation", "description": "Group dynamics masked individual understanding. More confident students led all phases of the group tasks while quieter students followed along without demonstrating their own grasp of the concepts."}, {"type": "expression", "name": "question14", "startWithNewLine": false, "title": "Likely Cause", "description": "The lesson relied heavily on group work without building in individual accountability. There were no mechanisms — individual written responses, targeted questioning of specific students, whiteboard checks — to ensure every student had to demonstrate understanding independently."}, {"type": "slider", "name": "question15", "title": "Severity", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question16", "title": "Occurance", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question17", "title": "Detectability", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, {"value": 2, "text": ""}, {"value": 3, "text": ""}, {"value": 4, "text": ""}, {"value": 5, "text": ""}, {"value": 6, "text": ""}, {"value": 7, "text": ""}, {"value": 8, "text": ""}, {"value": 9, "text": ""}, {"value": 10, "text": ""}]}]}, {"type": "panel", "name": "panel4", "isRequired": true, "elements": [{"type": "expression", "name": "question18", "title": "Observation", "description": "Groups progressed through the outdoor tasks at very different speeds. Faster groups finished early and became restless while slower groups were still working."}, {"type": "expression", "name": "question19", "startWithNewLine": false, "title": "Likely Cause", "description": "The outdoor activity had a single pathway with no differentiation or extension tasks. The pace was governed by the overall lesson plan rather than group readiness, and no contingency tasks were prepared for early finishers."}, {"type": "slider", "name": "question20", "title": "Severity", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question21", "title": "Occurance", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question22", "title": "Detectability", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, {"value": 2, "text": ""}, {"value": 3, "text": ""}, {"value": 4, "text": ""}, {"value": 5, "text": ""}, {"value": 6, "text": ""}, {"value": 7, "text": ""}, {"value": 8, "text": ""}, {"value": 9, "text": ""}, {"value": 10, "text": ""}]}]}, {"type": "panel", "name": "panel5", "isRequired": true, "elements": [{"type": "expression", "name": "question23", "title": "Observation", "description": "The transition from the outdoor activity back to the classroom disrupted lesson momentum. Several students took a number of minutes to resettle and re-engage with the indoor task."}, {"type": "expression", "name": "question24", "startWithNewLine": false, "title": "Likely Cause", "description": "The transition lacked a planned bridging structure. There was no re-focusing routine or short reflective prompt to help students shift mentally from the physical, outdoor experience to the abstract, desk-based task. The two phases felt disconnected."}, {"type": "slider", "name": "question25", "title": "Severity", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question26", "title": "Occurance", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, {"type": "slider", "name": "question27", "title": "Detectability", "isRequired": true, "min": 1, "max": 10, "customLabels": [1, {"value": 2, "text": ""}, {"value": 3, "text": ""}, {"value": 4, "text": ""}, {"value": 5, "text": ""}, {"value": 6, "text": ""}, {"value": 7, "text": ""}, {"value": 8, "text": ""}, {"value": 9, "text": ""}, {"value": 10, "text": ""}]}]}]}], "headerView": "advanced"};
+
+/* ------------------------------------------------------------------ *
+ * 2. Scale meanings. Keyed by slider TITLE so every panel's          *
+ *    Severity / Occurance / Detectability sliders are covered.       *
+ *    Index = slider value (1-10).                                     *
+ * ------------------------------------------------------------------ */
+const SCALES = {
+  "Severity": [null,
+    ["Negligible","Minor disruption, easily corrected without impact on learning."],
+    ["Very Low","Slight delay; students can recover without teacher."],
+    ["Low","Short confusion or distraction; minor loss of focus."],
+    ["Moderate","Temporary setback for a small group of students."],
+    ["Noticeable","Clear impact on understanding for several students."],
+    ["Significant","Learning outcome partially compromised for many students."],
+    ["High","Major interference with lesson flow; learning outcomes affected."],
+    ["Very High","Most students fail to grasp key concept or complete task."],
+    ["Critical","Lesson objective not achieved; frustration or disengagement."],
+    ["Severe","Lesson fails entirely; students disengage, activity abandoned."]],
+  "Occurance": [null,
+    ["Rare","Unlikely; has never occurred in similar lessons."],
+    ["Very Low","Happens once a term or less."],
+    ["Low","Might occur in isolated instances (e.g., 1-2 students)."],
+    ["Moderate","Could happen occasionally in similar contexts."],
+    ["Medium","Likely in each lesson if not controlled."],
+    ["Fairly High","Happens with several students or in each group."],
+    ["High","Frequently happens during similar lessons."],
+    ["Very High","Almost always occurs under current conditions."],
+    ["Extreme","Expected to occur repeatedly and predictably."],
+    ["Certain","Guaranteed to happen every time."]],
+  "Detectability": [null,
+    ["Very Easy","Instantly visible to teacher; corrected immediately."],
+    ["Easy","Quickly spotted through observation or student response."],
+    ["Low Difficulty","Detected through monitoring but after a short delay."],
+    ["Moderate","Teacher notices after some impact has occurred."],
+    ["Medium","Detected at lesson's end or via exit cards."],
+    ["Difficult","Noticed only after reflection or discussion with colleagues."],
+    ["Very Difficult","Missed during lesson; only identified post-lesson."],
+    ["Hard","Requires external observation to be noticed."],
+    ["Extremely Hard","Not apparent even after reviewing outcomes."],
+    ["Undetectable","Cannot be detected without detailed post-hoc analysis."]]
+};
+
+/* Display-name overrides: keep data field "Occurance", show "Occurrence" */
+const TITLE_DISPLAY = { "Occurance": "Occurrence" };
+
+/* ------------------------------------------------------------------ *
+ * 3. Create + theme the survey                                       *
+ * ------------------------------------------------------------------ */
+const survey = new Survey.Model(surveyJson);
+
+// Show the live number on the native slider too (belt and braces)
+survey.getAllQuestions().forEach(function (q) {
+  if (q.getType() === "slider" && SCALES[q.title]) {
+    if ("showValue" in q) { try { q.showValue = true; } catch (e) {} }
+  }
+});
+
+/* ------------------------------------------------------------------ *
+ * 4. Live label: build a readout element under each scale slider     *
+ * ------------------------------------------------------------------ */
+function readoutId(q) { return "readout_" + q.name; }
+
+function renderReadout(q) {
+  const scale = SCALES[q.title];
+  if (!scale) return;
+  const el = document.getElementById(readoutId(q));
+  if (!el) return;
+  const v = q.value;
+  if (v == null || !scale[v]) {
+    el.className = "scale-readout scale-readout--" + q.title + " scale-readout--empty";
+    el.textContent = "Move the slider to see the rating";
+    return;
+  }
+  const desc = scale[v][0], meaning = scale[v][1];
+  el.className = "scale-readout scale-readout--" + q.title;
+  el.innerHTML =
+    '<span class="scale-readout__val">' + v + " \u2014 " + desc + "</span>" +
+    '<span class="scale-readout__meaning">' + meaning + "</span>";
+}
+
+// Inject a readout container right after each slider once it renders
+survey.onAfterRenderQuestion.add(function (sender, options) {
+  const q = options.question;
+  if (q.getType() !== "slider" || !SCALES[q.title]) return;
+
+  // Apply display title override (Occurance -> Occurrence)
+  if (TITLE_DISPLAY[q.title]) {
+    const titleEl = options.htmlElement.querySelector(".sd-question__title, .sv-question__title, .sd-title");
+    if (titleEl) {
+      // replace only the visible text node, keep the required asterisk markup
+      titleEl.childNodes.forEach(function (n) {
+        if (n.nodeType === 3 && n.textContent.trim() === q.title) n.textContent = TITLE_DISPLAY[q.title];
+      });
+    }
+  }
+
+  let el = options.htmlElement.querySelector("#" + readoutId(q));
+  if (!el) {
+    el = document.createElement("div");
+    el.id = readoutId(q);
+    options.htmlElement.appendChild(el);
+  }
+  renderReadout(q);
+});
+
+// Update the readout whenever a slider value changes
+survey.onValueChanged.add(function (sender, options) {
+  const q = options.question;
+  if (q && q.getType && q.getType() === "slider" && SCALES[q.title]) {
+    renderReadout(q);
+  }
+});
+
+/* ------------------------------------------------------------------ *
+ * 5. Google Sheets submission  --  ADD LATER                          *
+ * ------------------------------------------------------------------ *
+ * When ready, paste your Apps Script Web App URL below and uncomment.
+ *
+ * const SHEET_URL = "https://script.google.com/macros/s/XXXX/exec";
+ * survey.onComplete.add(function (sender) {
+ *   fetch(SHEET_URL, {
+ *     method: "POST",
+ *     mode: "no-cors",
+ *     headers: { "Content-Type": "text/plain;charset=utf-8" },
+ *     body: JSON.stringify(sender.data)
+ *   }).catch(function (e) { console.error("Submit failed:", e); });
+ * });
+ * ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ *
+ * 6. Render                                                           *
+ * ------------------------------------------------------------------ */
+survey.render(document.getElementById("surveyContainer"));
+</script>
+</body>
+</html>
