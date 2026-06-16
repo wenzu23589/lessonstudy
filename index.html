@@ -151,20 +151,17 @@ survey.onValueChanged.add(function (sender, options) {
 });
 
 /* ------------------------------------------------------------------ *
- * 5. Google Sheets submission  --  ADD LATER                          *
- * ------------------------------------------------------------------ *
- * When ready, paste your Apps Script Web App URL below and uncomment.
- *
- * const SHEET_URL = "https://script.google.com/macros/s/XXXX/exec";
- * survey.onComplete.add(function (sender) {
- *   fetch(SHEET_URL, {
- *     method: "POST",
- *     mode: "no-cors",
- *     headers: { "Content-Type": "text/plain;charset=utf-8" },
- *     body: JSON.stringify(sender.data)
- *   }).catch(function (e) { console.error("Submit failed:", e); });
- * });
+ * 5. Google Sheets submission                                         *
  * ------------------------------------------------------------------ */
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbw4N58ZHCd1CCWiA7XdIplb6zPl-y83mUVibeLiui--SAYUQp0MfRiqADJudM5JLa4vMQ/exec";
+survey.onComplete.add(function (sender) {
+  fetch(SHEET_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(sender.data)
+  }).catch(function (e) { console.error("Submit failed:", e); });
+});
 
 /* ------------------------------------------------------------------ *
  * 6. Render                                                           *
